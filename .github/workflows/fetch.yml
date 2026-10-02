@@ -1,0 +1,28 @@
+name: fetch-images
+on:
+  push:
+    paths: ['.github/workflows/fetch.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download images
+        run: |
+          mkdir -p fccp/v2
+          curl -fsSL -o fccp/v2/hero_c1.png https://backend.composio.dev/api/v3/sl/N2CdC8NnPX
+          curl -fsSL -o fccp/v2/phone_h1.png https://backend.composio.dev/api/v3/sl/-k61798Jmo
+          curl -fsSL -o fccp/v2/hero_c2.png https://backend.composio.dev/api/v3/sl/LJfhm65CmE
+          curl -fsSL -o fccp/v2/hero_c3.png https://backend.composio.dev/api/v3/sl/iChBCISkuU
+          curl -fsSL -o fccp/v2/phone_h2.png https://backend.composio.dev/api/v3/sl/A22Gw8Rgdu
+          file fccp/v2/*.png
+      - name: Commit
+        run: |
+          git config user.name 'github-actions'
+          git config user.email 'github-actions@users.noreply.github.com'
+          git add fccp
+          git commit -m 'Add FCCP v2 email images' || echo 'nothing to commit'
+          git push
